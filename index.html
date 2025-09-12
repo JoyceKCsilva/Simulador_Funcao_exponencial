@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simulador de Pandemia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body,html,#root{margin:0;padding:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;background:#0f1115;color:#f5f5f5}
+      *{box-sizing:border-box}
+      .sidebar{background:#181c23;padding:16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid #262c36}
+      .layout{display:grid;grid-template-columns:2fr 4fr;grid-template-rows:auto 220px;grid-template-areas:"sidebar chart" "sidebar resumo";height:100vh;width:100vw}
+      .chart-area{grid-area:chart;padding:16px}
+      .resumo{grid-area:resumo;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #262c36}
+      .painel{padding:16px;display:flex;flex-direction:column;gap:8px}
+      h2,h3{margin:4px 0 8px;font-weight:500}
+      label{font-size:12px;text-transform:uppercase;opacity:.8;letter-spacing:.5px}
+      input,select{padding:6px 8px;border-radius:4px;border:1px solid #2d3440;background:#10141a;color:#f5f5f5}
+      input:focus{outline:1px solid #4b91ff}
+      .row{display:flex;gap:8px}
+      .row > div{flex:1}
+      .stat{font-size:14px;line-height:1.3}
+      .badge{display:inline-block;background:#223449;padding:2px 6px;border-radius:4px;font-size:11px;margin-left:4px}
+      .toggle-line{display:flex;align-items:center;gap:8px;margin:4px 0}
+      .divider{height:1px;background:#262c36;margin:8px 0}
+      button{cursor:pointer;background:#2563eb;color:#fff;padding:8px 12px;border:none;border-radius:4px;font-weight:500}
+      button.secondary{background:#374151}
+      button:disabled{opacity:.5;cursor:not-allowed}
+      .footer-tip{font-size:11px;opacity:.65;margin-top:auto}
+      @media (max-width:1000px){
+        .layout{grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"sidebar" "chart" "resumo";height:auto}
+        .sidebar{flex-direction:row;flex-wrap:wrap}
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
