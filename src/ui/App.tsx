@@ -11,7 +11,7 @@ export const App: React.FC = () => {
   const [lockdown, setLockdown] = useState<LockdownConfig>({
     habilitado: true,
     semanaInicio: 12,
-    taxaFinal: 0.85,
+    taxaFinal: 0.8, // Testagem em Massa - corresponde a uma das opções predefinidas
     duracaoTransicao: 6,
   });
 
@@ -34,12 +34,12 @@ export const App: React.FC = () => {
         <div className="footer-tip">Sugestão: ajuste a taxa inicial para testar cenários agressivos (&gt;1.5) ou controlados (&lt;1.1).</div>
       </div>
       <div className="chart-area">
+        <div className="resumo" style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
+          <PainelResumo titulo="Com Mitigação" mitigado resultado={resultado} />
+          <PainelResumo titulo="Sem Mitigação" mitigado={false} resultado={resultado} />
+        </div>
         <h2>Curva de Casos</h2>
         <LinhaChart dadosMitigado={resultado.serieMitigada} dadosSem={resultado.serieSemMitigacao} />
-      </div>
-      <div className="resumo">
-        <PainelResumo titulo="Com Mitigação" mitigado resultado={resultado} />
-        <PainelResumo titulo="Sem Mitigação" mitigado={false} resultado={resultado} />
       </div>
     </div>
   );

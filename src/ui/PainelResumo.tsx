@@ -18,13 +18,14 @@ export const PainelResumo: React.FC<Props> = ({ titulo, mitigado, resultado }) =
       <div className="stat">Total casos: <strong>{Intl.NumberFormat('pt-BR').format(total)}</strong></div>
       {mitigado && (
         <>
-          <div className="stat">Redução absoluta: {Intl.NumberFormat('pt-BR').format(diff)}</div>
-          <div className="stat">Redução %: {pct.toFixed(2)}%</div>
+          <div className="divider" style={{ margin: '8px 0', borderTop: '1px solid #eee' }}></div>
+          <div className="stat melhoria" style={{ color: '#28a745', fontWeight: 'bold' }}>
+            Melhoria: {pct.toFixed(1)}% menos casos
+          </div>
+          <div className="stat">Casos evitados: {Intl.NumberFormat('pt-BR').format(diff)}</div>
         </>
       )}
-      {!mitigado && (
-        <div className="stat">Cenário base sem intervenções.</div>
-      )}
+
     </div>
   );
 };
