@@ -1,40 +1,23 @@
-import React, { ChangeEvent, useState, useEffect } from 'react';
-import { LockdownConfig } from '../../pandemic_simulator';
+import React, { ChangeEvent } from 'react';
+import { MitigacaoConfig, EstrategiaMitigacao, calcularMultiplicadorEstrategias } from '../../pandemic_simulator';
 
 interface Props {
   valores: {
     casosIniciais: number;
     semanasTotais: number;
     taxaInicial: number;
-    lockdown: LockdownConfig;
+    mitigacao: MitigacaoConfig;
   };
+  estrategiasCatalogo: EstrategiaMitigacao[];
   onChangeCasos: (v: number) => void;
   onChangeSemanas: (v: number) => void;
   onChangeTaxa: (v: number) => void;
-  onToggleLockdown: (v: boolean) => void;
-  onChangeLockdown: (p: Partial<LockdownConfig>) => void;
+  onToggleMitigacao: (v: boolean) => void;
+  onChangeMitigacao: (p: Partial<MitigacaoConfig>) => void;
 }
 
-export const ParametrosForm: React.FC<Props> = ({ valores, onChangeCasos, onChangeSemanas, onChangeTaxa, onToggleLockdown, onChangeLockdown }) => {
-  const { casosIniciais, semanasTotais, taxaInicial, lockdown } = valores;
-  
-  // Estratégias de mitigação com valores baseados em estudos reais
-  const estrategiasMitigacao = [
-    { valor: 0.6, label: 'Lockdown Rigoroso (R ≈ 0.6)' },
-    { valor: 0.75, label: 'Vacinação em Massa (R ≈ 0.75)' },
-    { valor: 0.4, label: 'Lockdown + Vacinação (R ≈ 0.4)' },
-    { valor: 0.9, label: 'Distanciamento Social (R ≈ 0.9)' },
-    { valor: 0.98, label: 'Uso de Máscaras (R ≈ 0.98)' },
-    { valor: 0.8, label: 'Testagem em Massa (R ≈ 0.8)' },
-  ];
-  
-  const [modoPersonalizado, setModoPersonalizado] = useState(false);
-  
-  // Verifica se o valor atual corresponde a alguma estratégia predefinida
-  useEffect(() => {
-    const estrategiaCorrespondente = estrategiasMitigacao.find(e => Math.abs(e.valor - lockdown.taxaFinal) < 0.01);
-    setModoPersonalizado(!estrategiaCorrespondente);
-  }, [lockdown.taxaFinal]);
+export const ParametrosForm: React.FC<Props> = ({ valores, estrategiasCatalogo, onChangeCasos, onChangeSemanas, onChangeTaxa, onToggleMitigacao, onChangeMitigacao }) => {
+  const { casosIniciais, semanasTotais, taxaInicial, mitigacao } = valores;
 
   function num(e: ChangeEvent<HTMLInputElement>, cb: (v: number) => void, min?: number, max?: number) {
     let v = e.target.valueAsNumber;
@@ -43,6 +26,20 @@ export const ParametrosForm: React.FC<Props> = ({ valores, onChangeCasos, onChan
     if (max !== undefined && v > max) v = max;
     cb(v);
   }
+
+  function toggleEstrategia(id: string) {
+    if (!mitigacao.habilitada) return;
+    const atual = new Set(mitigacao.estrategiasSelecionadas);
+    if (atual.has(id)) {
+      atual.delete(id);
+    } else {
+      atual.add(id);
+    }
+    onChangeMitigacao({ estrategiasSelecionadas: Array.from(atual) });
+  }
+
+  const multiplicadorPleno = calcularMultiplicadorEstrategias(mitigacao.estrategiasSelecionadas, estrategiasCatalogo);
+  const taxaFinalEstimada = (taxaInicial * multiplicadorPleno).toFixed(2);
 
   return (
     <form style={{ display: 'flex', flexDirection: 'column', gap: 12 }} onSubmit={e => e.preventDefault()}>
@@ -58,56 +55,37 @@ export const ParametrosForm: React.FC<Props> = ({ valores, onChangeCasos, onChan
 
       <div className="divider" />
       <div className="toggle-line">
-        <input type="checkbox" checked={lockdown.habilitado} onChange={e => onToggleLockdown(e.target.checked)} id="ck-lock" />
-        <label htmlFor="ck-lock">Ativar Mitigação</label>
+        <input type="checkbox" checked={mitigacao.habilitada} onChange={e => onToggleMitigacao(e.target.checked)} id="ck-mit" />
+        <label htmlFor="ck-mit">Ativar Mitigação</label>
       </div>
 
-      {lockdown.habilitado && (
+      {mitigacao.habilitada && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <label>Semana Início</label>
-          <input type="number" value={lockdown.semanaInicio} min={1} max={semanasTotais} onChange={e => onChangeLockdown({ semanaInicio: Math.min(e.target.valueAsNumber, semanasTotais) })} />
+          <input type="number" value={mitigacao.semanaInicio} min={1} max={semanasTotais} onChange={e => onChangeMitigacao({ semanaInicio: Math.min(e.target.valueAsNumber, semanasTotais) })} />
 
-          <label>Estratégia de Mitigação</label>
-          <select 
-            value={modoPersonalizado ? 'personalizado' : lockdown.taxaFinal.toString()}
-            onChange={e => {
-              const valor = e.target.value;
-              if (valor === 'personalizado') {
-                setModoPersonalizado(true);
-                // Mantém o valor atual ou define um padrão
-                if (lockdown.taxaFinal < 0.1 || lockdown.taxaFinal > taxaInicial) {
-                  onChangeLockdown({ taxaFinal: 0.9 });
-                }
-              } else {
-                setModoPersonalizado(false);
-                onChangeLockdown({ taxaFinal: parseFloat(valor) });
-              }
-            }}
-          >
-            {estrategiasMitigacao.map(estrategia => (
-              <option key={estrategia.valor} value={estrategia.valor}>
-                {estrategia.label}
-              </option>
-            ))}
-            <option value="personalizado">Personalizado</option>
-          </select>
-
-          {modoPersonalizado && (
-            <>
-              <label>Taxa Final Personalizada (R após)</label>
-              <input 
-                step="0.01" 
-                type="number" 
-                value={lockdown.taxaFinal} 
-                min={0.1} 
-                max={taxaInicial} 
-                onChange={e => onChangeLockdown({ taxaFinal: Math.min(e.target.valueAsNumber, taxaInicial) })} 
-              />
-            </>
-          )}
+          <label>Estratégias (checkbox – efeito cumulativo)</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {estrategiasCatalogo.map(est => {
+              const active = mitigacao.estrategiasSelecionadas.includes(est.id);
+              return (
+                <label key={est.id} style={{ fontSize: 12, display: 'flex', gap: 6, alignItems: 'flex-start', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={active} onChange={() => toggleEstrategia(est.id)} />
+                  <span style={{ lineHeight: 1.2 }}>
+                    <strong>{est.nome}</strong> <span style={{ opacity: .7 }}>×{est.multiplicador}</span><br />
+                    <span style={{ opacity: .65 }}>{est.descricao}</span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
 
           <label>Duração Transição (semanas)</label>
-          <input type="number" value={lockdown.duracaoTransicao} min={0} max={semanasTotais} onChange={e => onChangeLockdown({ duracaoTransicao: Math.min(e.target.valueAsNumber, semanasTotais) })} />
+          <input type="number" value={mitigacao.duracaoTransicao} min={0} max={semanasTotais} onChange={e => onChangeMitigacao({ duracaoTransicao: Math.min(e.target.valueAsNumber, semanasTotais) })} />
+
+          <div style={{ fontSize: 12, background: '#111b27', padding: 8, borderRadius: 4, border: '1px solid #1e2a36' }}>
+            Taxa estimada após transição completa: <strong>R ≈ {taxaFinalEstimada}</strong>
+          </div>
         </div>
       )}
 

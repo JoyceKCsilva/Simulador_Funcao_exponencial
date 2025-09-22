@@ -14,7 +14,7 @@ export const LinhaChart: React.FC<Props> = ({ dadosMitigado, dadosSem }) => {
     sem: dadosSem[idx]?.casos ?? null,
   }));
   return (
-    <ResponsiveContainer width="100%" height={380}>
+  <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data} margin={{ left: 8, right: 16, top: 8, bottom: 8 }}>
         <CartesianGrid stroke="#222" strokeDasharray="3 3" />
         <XAxis dataKey="semana" stroke="#ccc" />

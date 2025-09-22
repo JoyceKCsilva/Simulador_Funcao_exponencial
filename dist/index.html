@@ -5,13 +5,22 @@
     <title>Simulador de Pandemia</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      body,html,#root{margin:0;padding:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;background:#0f1115;color:#f5f5f5}
+  body,html,#root{margin:0;padding:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;background:#0f1115;color:#f5f5f5}
+  /* Ocultar scrollbars (WebKit) */
+  .no-scrollbar::-webkit-scrollbar{width:0;height:0}
+  /* Firefox */
+  .no-scrollbar{scrollbar-width:none}
+  /* Edge/Chromium overlay fallback */
+  .no-scrollbar{-ms-overflow-style:none}
       *{box-sizing:border-box}
-      .sidebar{background:#181c23;padding:16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid #262c36}
-      .layout{display:grid;grid-template-columns:2fr 4fr;grid-template-rows:auto 220px;grid-template-areas:"sidebar chart" "sidebar resumo";height:100vh;width:100vw}
-      .chart-area{grid-area:chart;padding:16px}
-      .resumo{grid-area:resumo;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #262c36}
+  .layout{display:flex;height:100vh;width:100vw;overflow:hidden}
+  .sidebar{background:#181c23;flex:0 0 32%;max-width:420px;min-width:300px;padding:16px;display:flex;flex-direction:column;gap:12px;border-right:1px solid #262c36;overflow:auto}
+  .sidebar.no-scrollbar{padding-right:20px; /* espaço fantasma para não cortar conteúdo */}
+  .chart-area{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:12px 16px;gap:12px}
+  .resumo{display:flex;gap:12px}
       .painel{padding:16px;display:flex;flex-direction:column;gap:8px}
+  .chart-wrapper{flex:1;min-height:0;position:relative}
+  .chart-wrapper > div{position:absolute;inset:0}
       h2,h3{margin:4px 0 8px;font-weight:500}
       label{font-size:12px;text-transform:uppercase;opacity:.8;letter-spacing:.5px}
       input,select{padding:6px 8px;border-radius:4px;border:1px solid #2d3440;background:#10141a;color:#f5f5f5}
@@ -27,11 +36,13 @@
       button:disabled{opacity:.5;cursor:not-allowed}
       .footer-tip{font-size:11px;opacity:.65;margin-top:auto}
       @media (max-width:1000px){
-        .layout{grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"sidebar" "chart" "resumo";height:auto}
-        .sidebar{flex-direction:row;flex-wrap:wrap}
+        .layout{flex-direction:column}
+        .sidebar{flex:0 0 auto;max-width:none;min-width:0;flex-direction:row;flex-wrap:wrap;height:auto}
+        .chart-area{flex:1}
+        .resumo{flex-direction:column}
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-Bxt6ZOKu.js"></script>
+    <script type="module" crossorigin src="/assets/index-DTn_1HPw.js"></script>
   </head>
   <body>
     <div id="root"></div>
