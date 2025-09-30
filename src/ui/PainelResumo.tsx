@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResultadoSimulacao } from '../../pandemic_simulator';
+import { useTheme, getThemeColors } from './ThemeContext';
 
 interface Props {
   titulo: string;
@@ -8,26 +9,63 @@ interface Props {
 }
 
 export const PainelResumo: React.FC<Props> = ({ titulo, mitigado, resultado }) => {
+  const { theme } = useTheme();
+  const colors = getThemeColors(theme);
+  
   const total = mitigado ? resultado.totalCasosMitigado : resultado.totalCasosSemMitigacao;
   const diff = resultado.totalCasosSemMitigacao - resultado.totalCasosMitigado;
   const pct = resultado.reducaoPercentual;
   const taxaFinal = resultado.taxaEquivalenteFinal;
 
   return (
-    <div className="painel">
-      <h3>{titulo}</h3>
-      <div className="stat">Total casos: <strong>{Intl.NumberFormat('pt-BR').format(total)}</strong></div>
+    <div style={{
+      background: colors.backgroundCard,
+      border: `1px solid ${colors.border}`,
+      borderRadius: '8px',
+      padding: '16px',
+      marginBottom: '16px'
+    }}>
+      <h3 style={{ margin: '0 0 12px 0', color: colors.text }}>{titulo}</h3>
+      <div style={{ margin: '8px 0', color: colors.text }}>
+        Total casos: <strong>{Intl.NumberFormat('pt-BR').format(total)}</strong>
+      </div>
       {mitigado && (
         <>
-          <div className="divider" style={{ margin: '8px 0', borderTop: '1px solid #2d3748' }}></div>
-          <div className="stat melhoria" style={{ color: '#22c55e', fontWeight: 'bold' }}>
-            {pct.toFixed(1)}% menos casos
+          <div style={{ 
+            margin: '8px 0', 
+            borderTop: `1px solid ${colors.border}`,
+            height: '1px'
+          }}></div>
+          <div style={{ 
+            color: colors.success, 
+            fontWeight: 'bold',
+            margin: '8px 0'
+          }}>
+          {pct.toFixed(1)}% menos casos
           </div>
-          <div className="stat">Casos evitados: {Intl.NumberFormat('pt-BR').format(diff)}</div>
-          {taxaFinal && <div className="stat" style={{ fontSize: 12, opacity: .75 }}>Taxa efetiva alvo ≈ {taxaFinal.toFixed(2)}</div>}
+          <div style={{ margin: '8px 0', color: colors.text }}>
+            Casos evitados: {Intl.NumberFormat('pt-BR').format(diff)}
+          </div>
+          {taxaFinal && (
+            <div style={{ 
+              fontSize: '12px', 
+              opacity: 0.75,
+              color: colors.textMuted,
+              margin: '8px 0'
+            }}>
+              Taxa efetiva alvo ≈ {taxaFinal.toFixed(2)}
+            </div>
+          )}
         </>
       )}
-
+      {!mitigado && (
+        <div style={{ 
+          margin: '8px 0',
+          color: colors.danger
+        }}>
+        Cenário base sem intervenções
+        </div>
+      )}
     </div>
   );
 };
