@@ -125,6 +125,22 @@ export const SobreNos: React.FC<Props> = ({ onVoltar }) => {
               {/* Seção Apoiadores */}
               <div style={{ marginBottom: 14 }}>
                 <h3 style={{ fontSize: 18, margin: 0, marginBottom: 8, color: colors.text }}>Apoiadores</h3>
+
+                  {/* FNDE */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <img 
+                    src="/logoFNDE.png"
+                    alt="Logo FNDE" 
+                    style={{ width: 50, height: 50, objectFit: 'contain', flexShrink: 0 }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{ fontSize: 13, margin: 0, marginBottom: 1, color: colors.text }}>FNDE</h4>
+                    <p style={{ fontSize: 10, opacity: .7, margin: 0, lineHeight: 1.2, color: colors.textSecondary }}>
+                      Fundo Nacional de Desenvolvimento da Educação
+                    </p>
+                  </div>
+                </div>
+              </div>
                 
                 {/* FACEPE */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
@@ -140,22 +156,6 @@ export const SobreNos: React.FC<Props> = ({ onVoltar }) => {
                     </p>
                   </div>
                 </div>
-
-                {/* FNDE */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <img 
-                    src="/logoFNDE.png"
-                    alt="Logo FNDE" 
-                    style={{ width: 50, height: 50, objectFit: 'contain', flexShrink: 0 }}
-                  />
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ fontSize: 13, margin: 0, marginBottom: 1, color: colors.text }}>FNDE</h4>
-                    <p style={{ fontSize: 10, opacity: .7, margin: 0, lineHeight: 1.2, color: colors.textSecondary }}>
-                      Fundo Nacional de Desenvolvimento da Educação
-                    </p>
-                  </div>
-                </div>
-              </div>
 
               {/* Seção Tecnologias */}
               <div style={{ marginTop: 'auto' }}>
