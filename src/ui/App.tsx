@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { simularPandemia, MitigacaoConfig } from '../../pandemic_simulator';
 import { LinhaChart } from './LinhaChart';
 import { ParametrosForm } from './ParametrosForm';
-import { PainelResumo } from './PainelResumo';
+import { PainelResumo, CardCasosEvitados } from './PainelResumo';
 import { WelcomeScreen } from './WelcomeScreen';
 import { SobreNos } from './SobreNos';
 import { ThemeToggle } from './ThemeToggle';
@@ -134,6 +134,7 @@ export const App: React.FC = () => {
           <div style={{ display: 'flex', gap: '16px', marginBottom: '20px' }}>
             <PainelResumo titulo="Com Mitigação" mitigado resultado={resultado} />
             <PainelResumo titulo="Sem Mitigação" mitigado={false} resultado={resultado} />
+            <CardCasosEvitados resultado={resultado} />
           </div>
           <div style={{ 
             height: '400px', 

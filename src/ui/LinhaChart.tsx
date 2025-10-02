@@ -42,7 +42,7 @@ export const LinhaChart: React.FC<Props> = ({ dadosMitigado, dadosSem }) => {
           dataKey="sem" 
           stroke={colors.danger} 
           dot={false} 
-          strokeWidth={2} 
+          strokeWidth={4} 
           name="Sem Mitigação" 
         />
         <Line 
@@ -50,7 +50,7 @@ export const LinhaChart: React.FC<Props> = ({ dadosMitigado, dadosSem }) => {
           dataKey="mitigado" 
           stroke={colors.primary} 
           dot={false} 
-          strokeWidth={2} 
+          strokeWidth={4} 
           name="Com Mitigação" 
         />
       </LineChart>
