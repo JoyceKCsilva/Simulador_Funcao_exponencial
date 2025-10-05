@@ -49,9 +49,6 @@ export const SobreNos: React.FC<Props> = ({ onVoltar }) => {
         
         <header>
           <h1 style={{ margin: 0, fontSize: 34, color: colors.text }}>Sobre Nós</h1>
-          <p style={{ opacity: .8, lineHeight: 1.5, color: colors.textSecondary }}>
-            Conheça a equipe e as instituições por trás do Simulador de Mitigação Pandêmica
-          </p>
         </header>
 
         {/* Layout em duas colunas */}
